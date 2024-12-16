@@ -60,8 +60,8 @@
 
 <div class="container">
     <h1>Snowmobiling Safety Checker</h1>
-    <label for="snowfall">Enter the amount of new snowfall (in cm):</label>
-    <input type="number" id="snowfall" placeholder="Enter snowfall in cm" />
+    <label for="snowfall">Enter the amount of new snowfall (in inches):</label>
+    <input type="number" id="snowfall" placeholder="Enter snowfall in inches" />
     <button onclick="checkSnowmobilingSafety()">Check Safety</button>
 
     <div class="result" id="result"></div>
@@ -69,38 +69,40 @@
 
 <script>
     function checkSnowmobilingSafety() {
-        const snowfall = parseFloat(document.getElementById('snowfall').value);
+        const snowfallInches = parseFloat(document.getElementById('snowfall').value);
         const resultDiv = document.getElementById('result');
 
-        if (isNaN(snowfall) || snowfall < 0) {
+        if (isNaN(snowfallInches) || snowfallInches < 0) {
             resultDiv.innerHTML = "Please enter a valid number for snowfall.";
             resultDiv.className = "result warning";
             return;
         }
 
-        // Define safety thresholds
-        const SAFE_SNOWFALL_THRESHOLD = 5;  // cm for safe snowmobiling
-        const AVALANCHE_RISK_THRESHOLD = 30;  // cm above which avalanche risk increases
-        const POWDER_DAY_THRESHOLD = 15;  // cm for powder day conditions
+        // Define safety thresholds (converted to inches)
+        const SAFE_SNOWFALL_THRESHOLD = 2;  // inches for safe snowmobiling
+        const AVALANCHE_RISK_THRESHOLD = 12;  // inches above which avalanche risk increases
+        const POWDER_DAY_THRESHOLD = 6;  // inches for powder day conditions
 
         let resultMessage = "";
 
-        if (snowfall < SAFE_SNOWFALL_THRESHOLD) {
+        // Evaluate safety based on snowfall
+        if (snowfallInches < SAFE_SNOWFALL_THRESHOLD) {
             resultMessage = "Not enough snow for safe snowmobiling. You need more snow to safely operate a snowmobile.";
             resultDiv.className = "result warning";
-        } else if (snowfall >= AVALANCHE_RISK_THRESHOLD) {
-            resultMessage = "Warning: Avalanche risk is high due to heavy snowfall (30+ cm). Avoid snowmobiling in areas with poor avalanche control.";
-            resultDiv.className = "result warning";
-        } else {
+        } else if (snowfallInches >= AVALANCHE_RISK_THRESHOLD && snowfallInches < 30) {
             resultMessage = "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports and ensure you're familiar with the area.";
             resultDiv.className = "result safe";
+        } else if (snowfallInches >= 30) {
+            resultMessage = "Warning: Avalanche risk is high due to heavy snowfall (30+ inches).";
+            resultMessage += "<br><br>In these conditions, it's critical to assess terrain carefully. Avoid steep slopes, especially those with loose snow, as they are prone to avalanches. Steep mountain areas, open fields, or places with existing snowdrifts should be avoided unless you have proper avalanche safety training and equipment. It's best to stay in low-angle terrain or protected areas.";
+            resultDiv.className = "result warning";
         }
 
         // Add additional information about snow quality and conditions
-        if (snowfall >= POWDER_DAY_THRESHOLD && snowfall < AVALANCHE_RISK_THRESHOLD) {
+        if (snowfallInches >= POWDER_DAY_THRESHOLD && snowfallInches < AVALANCHE_RISK_THRESHOLD) {
             resultMessage += "<br><br>Great news! You’re experiencing a powder day. This is ideal snowmobiling weather. The snow is soft and fluffy, providing great conditions for smooth rides.";
             resultDiv.className = "result safe";
-        } else if (snowfall >= SAFE_SNOWFALL_THRESHOLD && snowfall < POWDER_DAY_THRESHOLD) {
+        } else if (snowfallInches >= SAFE_SNOWFALL_THRESHOLD && snowfallInches < POWDER_DAY_THRESHOLD) {
             resultMessage += "<br><br>The snow conditions are decent for snowmobiling. While not a powder day, it’s still a good day to ride. Ensure you are aware of potential avalanche risks.";
             resultDiv.className = "result info";
         } else {
