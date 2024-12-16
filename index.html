@@ -82,8 +82,13 @@
         const SAFE_SNOWFALL_THRESHOLD = 2;  // inches for safe snowmobiling
         const AVALANCHE_RISK_THRESHOLD = 12;  // inches above which avalanche risk increases
         const POWDER_DAY_THRESHOLD = 6;  // inches for powder day conditions
+        const HEAVY_SNOW_THRESHOLD = 18;  // inches for heavy snow conditions
 
         let resultMessage = "";
+
+        // Determine if the snow is light or heavy
+        const isHeavySnow = snowfallInches >= HEAVY_SNOW_THRESHOLD;
+        const isLightSnow = snowfallInches < HEAVY_SNOW_THRESHOLD && snowfallInches > 0;
 
         // Evaluate safety based on snowfall
         if (snowfallInches < SAFE_SNOWFALL_THRESHOLD) {
@@ -92,10 +97,21 @@
         } else if (snowfallInches >= AVALANCHE_RISK_THRESHOLD && snowfallInches < 30) {
             resultMessage = "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports and ensure you're familiar with the area.";
             resultDiv.className = "result safe";
-        } else if (snowfallInches >= 30) {
-            resultMessage = "Warning: Avalanche risk is high due to heavy snowfall (30+ inches).";
-            resultMessage += "<br><br>In these conditions, it's critical to assess terrain carefully. Avoid steep slopes, especially those with loose snow, as they are prone to avalanches. Steep mountain areas, open fields, or places with existing snowdrifts should be avoided unless you have proper avalanche safety training and equipment. It's best to stay in low-angle terrain or protected areas.";
+        } else if (snowfallInches >= 30 && snowfallInches < 50) {
+            resultMessage = "Warning: Avalanche risk is high due to significant snowfall (30–50 inches).";
+            resultMessage += "<br><br>In these conditions, it's crucial to assess terrain carefully. Avoid steep slopes, especially those with loose snow, as they are prone to avalanches. Ensure you have proper avalanche safety gear and training.";
             resultDiv.className = "result warning";
+        } else if (snowfallInches >= 50) {
+            resultMessage = "Warning: Avalanche risk is extreme due to massive snowfall (50+ inches).";
+            resultMessage += "<br><br>In these extreme conditions, you must be very cautious. Avalanche risks are at their peak. Avoid mountainous, steep areas, and be sure to check local avalanche advisories.";
+            resultDiv.className = "result warning";
+        }
+
+        // Fun evaluation based on snow conditions
+        if (isHeavySnow) {
+            resultMessage += "<br><br>Wow! It's a heavy snowfall day, great for deep powder but be cautious with the avalanche risks. If you're prepared and experienced, the conditions will be thrilling! Prepare for exciting, challenging rides.";
+        } else if (isLightSnow) {
+            resultMessage += "<br><br>The snowfall is light today, which may create a more forgiving terrain, but still be cautious. It's great for smooth rides and more manageable snowmobiling.";
         }
 
         // Add additional information about snow quality and conditions
