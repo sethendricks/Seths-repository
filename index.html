@@ -1,41 +1,100 @@
-# snowmobiling_safety.py
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snowmobiling Safety Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .result.warning {
+            color: red;
+        }
+        .result.safe {
+            color: green;
+        }
+    </style>
+</head>
+<body>
 
-def check_snowmobiling_safety(snowfall_cm):
-    """
-    This function evaluates snow conditions to determine if it is safe for snowmobiling and assesses avalanche risk.
-    :param snowfall_cm: Amount of new snowfall in centimeters
-    :return: A string message indicating whether it's safe to snowmobile and the avalanche risk
-    """
+<div class="container">
+    <h1>Snowmobiling Safety Checker</h1>
+    <label for="snowfall">Enter the amount of new snowfall (in cm):</label>
+    <input type="number" id="snowfall" placeholder="Enter snowfall in cm" />
+    <button onclick="checkSnowmobilingSafety()">Check Safety</button>
 
-    # Define the safety thresholds for snowmobiling and avalanches
-    SAFE_SNOWFALL_THRESHOLD = 5  # cm of snow required for safe snowmobiling
-    AVALANCHE_RISK_THRESHOLD = 30  # cm of snow above which avalanche risk increases
+    <div class="result" id="result"></div>
+</div>
 
-    # Check if the snowfall is enough for snowmobiling
-    if snowfall_cm < SAFE_SNOWFALL_THRESHOLD:
-        return "Not enough snow for safe snowmobiling. Please wait for more snow."
+<script>
+    function checkSnowmobilingSafety() {
+        const snowfall = parseFloat(document.getElementById('snowfall').value);
+        const resultDiv = document.getElementById('result');
 
-    # Check avalanche risk based on snowfall
-    elif snowfall_cm >= AVALANCHE_RISK_THRESHOLD:
-        return "Warning: Avalanche risk is high due to heavy snowfall (30+ cm). Avoid snowmobiling."
+        if (isNaN(snowfall) || snowfall < 0) {
+            resultDiv.innerHTML = "Please enter a valid number for snowfall.";
+            resultDiv.className = "result warning";
+            return;
+        }
 
-    # If snowfall is sufficient but not excessive
-    else:
-        return "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports."
+        // Define safety thresholds
+        const SAFE_SNOWFALL_THRESHOLD = 5;  // cm for safe snowmobiling
+        const AVALANCHE_RISK_THRESHOLD = 30;  // cm above which avalanche risk increases
 
-# Main function to handle user input and output
-if __name__ == "__main__":
-    print("Snowmobiling Safety Checker")
+        if (snowfall < SAFE_SNOWFALL_THRESHOLD) {
+            resultDiv.innerHTML = "Not enough snow for safe snowmobiling. Please wait for more snow.";
+            resultDiv.className = "result warning";
+        } else if (snowfall >= AVALANCHE_RISK_THRESHOLD) {
+            resultDiv.innerHTML = "Warning: Avalanche risk is high due to heavy snowfall (30+ cm). Avoid snowmobiling.";
+            resultDiv.className = "result warning";
+        } else {
+            resultDiv.innerHTML = "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports.";
+            resultDiv.className = "result safe";
+        }
+    }
+</script>
 
-    # Input: Get the amount of new snowfall from the user
-    try:
-        snowfall = float(input("Enter the amount of new snowfall (in cm): "))
-        
-        # Validate input for non-negative snowfall
-        if snowfall < 0:
-            print("Invalid input: Snowfall cannot be negative. Please enter a valid number.")
-        else:
-            # Evaluate the snow conditions and print the result
+</body>
+</html>
+
             result = check_snowmobiling_safety(snowfall)
             print(result)
 
