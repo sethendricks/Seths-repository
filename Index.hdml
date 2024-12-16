@@ -1,0 +1,43 @@
+# snowmobiling_safety.py
+
+def check_snowmobiling_safety(snowfall_cm):
+    """
+    This function evaluates snow conditions to determine if it is safe for snowmobiling and assesses avalanche risk.
+    :param snowfall_cm: Amount of new snowfall in centimeters
+    :return: A string message indicating whether it's safe to snowmobile and the avalanche risk
+    """
+
+    # Define the safety thresholds for snowmobiling and avalanches
+    SAFE_SNOWFALL_THRESHOLD = 5  # cm of snow required for safe snowmobiling
+    AVALANCHE_RISK_THRESHOLD = 30  # cm of snow above which avalanche risk increases
+
+    # Check if the snowfall is enough for snowmobiling
+    if snowfall_cm < SAFE_SNOWFALL_THRESHOLD:
+        return "Not enough snow for safe snowmobiling. Please wait for more snow."
+
+    # Check avalanche risk based on snowfall
+    elif snowfall_cm >= AVALANCHE_RISK_THRESHOLD:
+        return "Warning: Avalanche risk is high due to heavy snowfall (30+ cm). Avoid snowmobiling."
+
+    # If snowfall is sufficient but not excessive
+    else:
+        return "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports."
+
+# Main function to handle user input and output
+if __name__ == "__main__":
+    print("Snowmobiling Safety Checker")
+
+    # Input: Get the amount of new snowfall from the user
+    try:
+        snowfall = float(input("Enter the amount of new snowfall (in cm): "))
+        
+        # Validate input for non-negative snowfall
+        if snowfall < 0:
+            print("Invalid input: Snowfall cannot be negative. Please enter a valid number.")
+        else:
+            # Evaluate the snow conditions and print the result
+            result = check_snowmobiling_safety(snowfall)
+            print(result)
+
+    except ValueError:
+        print("Invalid input: Please enter a numerical value for snowfall in cm.")
