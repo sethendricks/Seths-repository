@@ -42,7 +42,7 @@
         }
         .result {
             margin-top: 20px;
-            text-align: center;
+            text-align: left;
             font-size: 18px;
         }
         .result.warning {
@@ -50,6 +50,9 @@
         }
         .result.safe {
             color: green;
+        }
+        .result.info {
+            color: #555;
         }
     </style>
 </head>
@@ -78,17 +81,33 @@
         // Define safety thresholds
         const SAFE_SNOWFALL_THRESHOLD = 5;  // cm for safe snowmobiling
         const AVALANCHE_RISK_THRESHOLD = 30;  // cm above which avalanche risk increases
+        const POWDER_DAY_THRESHOLD = 15;  // cm for powder day conditions
+
+        let resultMessage = "";
 
         if (snowfall < SAFE_SNOWFALL_THRESHOLD) {
-            resultDiv.innerHTML = "Not enough snow for safe snowmobiling. Please wait for more snow.";
+            resultMessage = "Not enough snow for safe snowmobiling. You need more snow to safely operate a snowmobile.";
             resultDiv.className = "result warning";
         } else if (snowfall >= AVALANCHE_RISK_THRESHOLD) {
-            resultDiv.innerHTML = "Warning: Avalanche risk is high due to heavy snowfall (30+ cm). Avoid snowmobiling.";
+            resultMessage = "Warning: Avalanche risk is high due to heavy snowfall (30+ cm). Avoid snowmobiling in areas with poor avalanche control.";
             resultDiv.className = "result warning";
         } else {
-            resultDiv.innerHTML = "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports.";
+            resultMessage = "Safe for snowmobiling. Avalanche risk is moderate. Always check local avalanche reports and ensure you're familiar with the area.";
             resultDiv.className = "result safe";
         }
+
+        // Add additional information about snow quality and conditions
+        if (snowfall >= POWDER_DAY_THRESHOLD && snowfall < AVALANCHE_RISK_THRESHOLD) {
+            resultMessage += "<br><br>Great news! You’re experiencing a powder day. This is ideal snowmobiling weather. The snow is soft and fluffy, providing great conditions for smooth rides.";
+            resultDiv.className = "result safe";
+        } else if (snowfall >= SAFE_SNOWFALL_THRESHOLD && snowfall < POWDER_DAY_THRESHOLD) {
+            resultMessage += "<br><br>The snow conditions are decent for snowmobiling. While not a powder day, it’s still a good day to ride. Ensure you are aware of potential avalanche risks.";
+            resultDiv.className = "result info";
+        } else {
+            resultMessage += "<br><br>Ensure you're familiar with the snow conditions and the terrain. Avalanche safety gear is recommended if the snow is heavy.";
+        }
+
+        resultDiv.innerHTML = resultMessage;
     }
 </script>
 
