@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snowmobiling Safety Checker</title>
+    <title>Snow Conditions Safety Checker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,7 +59,7 @@
 <body>
 
 <div class="container">
-    <h1>Snowmobiling Safety Checker</h1>
+    <h1>Snow Conditions Safety Checker</h1>
     <label for="snowfall">Enter the amount of new snowfall (in inches):</label>
     <input type="number" id="snowfall" placeholder="Enter snowfall in inches" />
     
@@ -69,16 +69,23 @@
     <label for="windLoad">Enter the wind load (in mph or km/h):</label>
     <input type="number" id="windLoad" placeholder="Enter wind load" />
     
-    <button onclick="checkSnowmobilingSafety()">Check Safety</button>
+    <label for="activityType">Select activity (Snowmobiling/Skiing):</label>
+    <select id="activityType">
+        <option value="snowmobiling">Snowmobiling</option>
+        <option value="skiing">Skiing</option>
+    </select>
+    
+    <button onclick="checkSnowConditions()">Check Safety</button>
 
     <div class="result" id="result"></div>
 </div>
 
 <script>
-    function checkSnowmobilingSafety() {
+    function checkSnowConditions() {
         const snowfallInches = parseFloat(document.getElementById('snowfall').value);
         const windDirection = document.getElementById('windDirection').value.trim().toLowerCase();
         const windLoad = parseFloat(document.getElementById('windLoad').value);
+        const activityType = document.getElementById('activityType').value;
         const resultDiv = document.getElementById('result');
 
         if (isNaN(snowfallInches) || snowfallInches < 0 || isNaN(windLoad) || windLoad < 0 || windDirection === "") {
@@ -91,40 +98,46 @@
 
         // Assess snow conditions
         if (snowfallInches < 2) {
-            resultMessage = "Not enough snow for snowmobiling. With less than 2 inches, terrain will likely be uneven, and riding will be rough. Avoid snowmobiling in these conditions.";
+            resultMessage = "Not enough snow for snowmobiling or skiing. With less than 2 inches, terrain will likely be uneven, and riding or skiing will be rough. Avoid these conditions.";
             resultDiv.className = "result warning";
         } else if (snowfallInches >= 2 && snowfallInches < 6) {
-            resultMessage = "Conditions are not ideal for snowmobiling. Snow is minimal, and wind could make conditions even worse.";
+            resultMessage = "Conditions are not ideal for snowmobiling or skiing. Snow is minimal, and wind could make conditions even worse. Caution is advised.";
             resultDiv.className = "result info";
         } else if (snowfallInches >= 6 && snowfallInches < 12) {
-            resultMessage = "Perfect for a smooth, powdery ride—ideal for someone with your experience.";
+            resultMessage = "Ideal conditions for snowmobiling or skiing—perfect for a smooth, powdery ride or descent. However, wind conditions need to be considered.";
             resultDiv.className = "result safe";
         } else {
-            resultMessage = "Extreme snow conditions. Avalanche risk is high. Proceed with caution.";
+            resultMessage = "Extreme snow conditions for snowmobiling or skiing. Avalanche risk is high. Proceed with caution, especially with significant wind load.";
             resultDiv.className = "result warning";
         }
 
         // Adjust conditions based on wind direction and load
         if (windDirection === "north" || windDirection === "west") {
-            resultMessage += "<br><br>Wind coming from the North or West could lead to blowing snow, creating uneven surfaces and increasing avalanche risk.";
+            resultMessage += "<br><br>Wind coming from the North or West could lead to blowing snow, creating uneven surfaces and increasing avalanche risk. For skiing, these winds might cause snow drifts that could make the terrain unpredictable.";
         } else if (windDirection === "south" || windDirection === "east") {
-            resultMessage += "<br><br>Wind coming from the South or East may not affect snow conditions as much, but heavy winds could still drift snow in certain areas.";
+            resultMessage += "<br><br>Wind coming from the South or East may not affect snow conditions as much, but heavy winds could still drift snow in certain areas, making conditions less stable.";
         }
 
         // Wind load effects
         if (windLoad >= 20 && windLoad < 40) {
-            resultMessage += "<br><br>Wind load is moderate. It could affect snowpack stability, increasing avalanche risk. Be cautious in higher altitudes.";
+            resultMessage += "<br><br>Wind load is moderate. It could affect snowpack stability, increasing avalanche risk, which is a concern for both snowmobiling and skiing. Be cautious in higher altitudes.";
         } else if (windLoad >= 40) {
-            resultMessage += "<br><br>Wind load is high. Expect drifting snow and increased avalanche risk. Do not venture into steep or exposed terrain without proper equipment.";
+            resultMessage += "<br><br>Wind load is high. Expect drifting snow and increased avalanche risk. Avoid steep slopes and exposed areas, especially for skiing, where wind may alter the terrain drastically.";
         }
 
         // Add general fun factor and snow quality for each range
         if (snowfallInches >= 6 && snowfallInches < 12) {
-            resultMessage += "<br><br>Conditions will be great, but wind may cause drifting snow and unstable terrain in some areas. Stay aware.";
+            resultMessage += "<br><br>Conditions will be great for snowmobiling or skiing, but wind may cause drifting snow and unstable terrain in some areas. Stay aware of wind gusts that could affect your ride or run.";
         } else if (snowfallInches >= 12 && snowfallInches < 20) {
-            resultMessage += "<br><br>Conditions are thrilling, with deeper snow for more challenging rides. Avalanche risk is rising, and wind may worsen conditions.";
+            resultMessage += "<br><br>Conditions are thrilling, with deeper snow for more challenging rides or runs. Avalanche risk is rising, and wind load may worsen conditions.";
         } else if (snowfallInches >= 20) {
-            resultMessage += "<br><br>Extreme snow conditions! If you are well-prepared, this will be one of the most thrilling and challenging snowmobiling experiences, but wind load could worsen the situation.";
+            resultMessage += "<br><br>Extreme snow conditions! If you are well-prepared, this will be one of the most thrilling and challenging experiences, but wind load could exacerbate the risks, especially for skiing in areas with unstable snow.";
+        }
+
+        if (activityType === "skiing") {
+            resultMessage += "<br><br><strong>For Skiing:</strong> Make sure to check the terrain for any hidden obstacles, such as rocks or ice, especially in areas with less snow coverage. Be mindful of the avalanche conditions, and always carry avalanche safety gear, including a beacon, shovel, and probe.";
+        } else if (activityType === "snowmobiling") {
+            resultMessage += "<br><br><strong>For Snowmobiling:</strong> Make sure your snowmobile is in good condition, and keep an eye on the terrain for possible snowdrifts. Avoid steep slopes, and ensure you have the proper avalanche safety gear, as deep powder and wind can alter the landscape quickly.";
         }
 
         resultDiv.innerHTML = resultMessage;
