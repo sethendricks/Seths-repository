@@ -98,46 +98,47 @@
 
         // Assess snow conditions
         if (snowfallInches < 2) {
-            resultMessage = "Not enough snow for snowmobiling or skiing. With less than 2 inches, terrain will likely be uneven, and riding or skiing will be rough. Avoid these conditions.";
+            resultMessage = "With less than 2 inches of snow, the terrain will be very uneven. Both snowmobiling and skiing are not recommended. Conditions will be harsh, and any attempt could lead to injury. Avoid this level of snow unless you're prepared to face rocky, icy surfaces.";
             resultDiv.className = "result warning";
         } else if (snowfallInches >= 2 && snowfallInches < 6) {
-            resultMessage = "Conditions are not ideal for snowmobiling or skiing. Snow is minimal, and wind could make conditions even worse. Caution is advised.";
+            resultMessage = "At 2 to 6 inches of snow, the snow coverage is still quite thin. For skiing, you might encounter a lot of uneven ground or icy patches under the snow. Snowmobiling will be difficult, as the snow might not be deep enough for smooth travel, causing frequent obstacles and rough terrain. Wind conditions may worsen the situation, creating drifting snow or exposing patches of ice.";
             resultDiv.className = "result info";
         } else if (snowfallInches >= 6 && snowfallInches < 12) {
-            resultMessage = "Ideal conditions for snowmobiling or skiing—perfect for a smooth, powdery ride or descent. However, wind conditions need to be considered.";
+            resultMessage = "With 6 to 12 inches of snow, you are entering better conditions for both skiing and snowmobiling. The snow depth is enough for a smoother experience, but caution is still advised, especially if there are any hard-packed areas underneath. For snowmobiling, the snow can create fun trails but might still be uneven. Skiing on this snow will be more enjoyable, but you may still encounter some bumps. Wind load at this level may cause some drifting and change the terrain quickly.";
             resultDiv.className = "result safe";
+        } else if (snowfallInches >= 12 && snowfallInches < 20) {
+            resultMessage = "At 12 to 20 inches, conditions are excellent for both skiing and snowmobiling, offering deep powder and a smooth ride for snowmobiles and exciting, soft powder for skiing. However, wind conditions become more important here, as winds may blow snow into areas, creating pockets of deeper snow or drifted sections that could pose danger. Avalanche risk can rise, so proper safety precautions should be taken, including checking avalanche forecasts and being prepared with the right equipment.";
+            resultDiv.className = "result safe";
+        } else if (snowfallInches >= 20 && snowfallInches < 30) {
+            resultMessage = "20 to 30 inches of snow creates thrilling conditions for snowmobiling and skiing, providing deep powder that is ideal for experienced riders and skiers. However, avalanche risk increases significantly with this amount of snow, especially in more mountainous terrain. The wind could further affect snow stability, and terrain conditions may shift quickly. Be sure to assess the terrain for potential avalanche zones and adjust your plans accordingly.";
+            resultDiv.className = "result warning";
+        } else if (snowfallInches >= 30 && snowfallInches < 40) {
+            resultMessage = "30 to 40 inches of snow results in extreme conditions for snowmobiling and skiing. While the powder is deep and challenging, it can be dangerous, particularly with rising avalanche risk. The snow might cover dangerous obstacles, and wind conditions can create hard-packed snow or massive drifts that change the landscape rapidly. You should only consider venturing into these conditions if you're an expert with avalanche training and the necessary equipment.";
+            resultDiv.className = "result warning";
         } else {
-            resultMessage = "Extreme snow conditions for snowmobiling or skiing. Avalanche risk is high. Proceed with caution, especially with significant wind load.";
+            resultMessage = `With over ${snowfallInches} inches of snow, the conditions are extremely challenging and dangerous. Avalanche risk is extremely high, and snowmobiling or skiing should only be attempted in controlled, monitored environments with avalanche safety gear. The wind load may cause massive drifts or expose underlying ice, creating unpredictable terrain. Even experienced riders and skiers should proceed with caution and rely on up-to-date avalanche forecasts.`;
             resultDiv.className = "result warning";
         }
 
         // Adjust conditions based on wind direction and load
         if (windDirection === "north" || windDirection === "west") {
-            resultMessage += "<br><br>Wind coming from the North or West could lead to blowing snow, creating uneven surfaces and increasing avalanche risk. For skiing, these winds might cause snow drifts that could make the terrain unpredictable.";
+            resultMessage += "<br><br>Wind from the North or West will often cause snow to drift and form uneven terrain, making conditions hazardous for snowmobiling and skiing. Be especially cautious in open, exposed areas where winds can shift the snow quickly.";
         } else if (windDirection === "south" || windDirection === "east") {
-            resultMessage += "<br><br>Wind coming from the South or East may not affect snow conditions as much, but heavy winds could still drift snow in certain areas, making conditions less stable.";
+            resultMessage += "<br><br>Winds from the South or East are usually less problematic, but can still create drifting snow in certain areas. It’s important to monitor the terrain closely to ensure a smooth ride or descent.";
         }
 
         // Wind load effects
         if (windLoad >= 20 && windLoad < 40) {
-            resultMessage += "<br><br>Wind load is moderate. It could affect snowpack stability, increasing avalanche risk, which is a concern for both snowmobiling and skiing. Be cautious in higher altitudes.";
+            resultMessage += "<br><br>Moderate wind load may result in drifting snow and areas of harder packed snow. Avalanche risk increases as the snowpack becomes unstable. It's important to avoid steep slopes and assess snow stability regularly.";
         } else if (windLoad >= 40) {
-            resultMessage += "<br><br>Wind load is high. Expect drifting snow and increased avalanche risk. Avoid steep slopes and exposed areas, especially for skiing, where wind may alter the terrain drastically.";
+            resultMessage += "<br><br>High wind load will exacerbate avalanche risk, leading to significant drifting and highly unstable snow conditions. Be cautious of terrain changes, and avoid skiing or snowmobiling in areas known for avalanche risk.";
         }
 
-        // Add general fun factor and snow quality for each range
-        if (snowfallInches >= 6 && snowfallInches < 12) {
-            resultMessage += "<br><br>Conditions will be great for snowmobiling or skiing, but wind may cause drifting snow and unstable terrain in some areas. Stay aware of wind gusts that could affect your ride or run.";
-        } else if (snowfallInches >= 12 && snowfallInches < 20) {
-            resultMessage += "<br><br>Conditions are thrilling, with deeper snow for more challenging rides or runs. Avalanche risk is rising, and wind load may worsen conditions.";
-        } else if (snowfallInches >= 20) {
-            resultMessage += "<br><br>Extreme snow conditions! If you are well-prepared, this will be one of the most thrilling and challenging experiences, but wind load could exacerbate the risks, especially for skiing in areas with unstable snow.";
-        }
-
+        // Add activity-specific advice
         if (activityType === "skiing") {
-            resultMessage += "<br><br><strong>For Skiing:</strong> Make sure to check the terrain for any hidden obstacles, such as rocks or ice, especially in areas with less snow coverage. Be mindful of the avalanche conditions, and always carry avalanche safety gear, including a beacon, shovel, and probe.";
+            resultMessage += "<br><br><strong>For Skiing:</strong> Always assess snow coverage and ensure the terrain is safe for skiing. Carry avalanche gear and check for any warning signs of instability, especially in areas with heavy wind or deep snow.";
         } else if (activityType === "snowmobiling") {
-            resultMessage += "<br><br><strong>For Snowmobiling:</strong> Make sure your snowmobile is in good condition, and keep an eye on the terrain for possible snowdrifts. Avoid steep slopes, and ensure you have the proper avalanche safety gear, as deep powder and wind can alter the landscape quickly.";
+            resultMessage += "<br><br><strong>For Snowmobiling:</strong> Ensure your snowmobile is prepared for deep powder and potential snowdrifts. If avalanche risk is high, consider sticking to safer, flatter areas and always carry necessary avalanche safety equipment.";
         }
 
         resultDiv.innerHTML = resultMessage;
