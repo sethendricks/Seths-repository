@@ -62,6 +62,13 @@
     <h1>Snowmobiling Safety Checker</h1>
     <label for="snowfall">Enter the amount of new snowfall (in inches):</label>
     <input type="number" id="snowfall" placeholder="Enter snowfall in inches" />
+    
+    <label for="windDirection">Enter the wind direction (e.g., North, South, East, West):</label>
+    <input type="text" id="windDirection" placeholder="Enter wind direction" />
+    
+    <label for="windLoad">Enter the wind load (in mph or km/h):</label>
+    <input type="number" id="windLoad" placeholder="Enter wind load" />
+    
     <button onclick="checkSnowmobilingSafety()">Check Safety</button>
 
     <div class="result" id="result"></div>
@@ -70,74 +77,54 @@
 <script>
     function checkSnowmobilingSafety() {
         const snowfallInches = parseFloat(document.getElementById('snowfall').value);
+        const windDirection = document.getElementById('windDirection').value.trim().toLowerCase();
+        const windLoad = parseFloat(document.getElementById('windLoad').value);
         const resultDiv = document.getElementById('result');
 
-        if (isNaN(snowfallInches) || snowfallInches < 0) {
-            resultDiv.innerHTML = "Please enter a valid number for snowfall.";
+        if (isNaN(snowfallInches) || snowfallInches < 0 || isNaN(windLoad) || windLoad < 0 || windDirection === "") {
+            resultDiv.innerHTML = "Please enter valid values for snowfall, wind direction, and wind load.";
             resultDiv.className = "result warning";
             return;
         }
 
         let resultMessage = "";
 
-        // Detailed avalanche and snow conditions for individual snowfalls
+        // Assess snow conditions
         if (snowfallInches < 2) {
             resultMessage = "Not enough snow for snowmobiling. With less than 2 inches, terrain will likely be uneven, and riding will be rough. Avoid snowmobiling in these conditions.";
             resultDiv.className = "result warning";
-        } else if (snowfallInches === 2) {
-            resultMessage = "Just enough snow to begin considering snowmobiling. However, expect bumpy conditions and minimal cover. Avalanche risk is low.";
+        } else if (snowfallInches >= 2 && snowfallInches < 6) {
+            resultMessage = "Conditions are not ideal for snowmobiling. Snow is minimal, and wind could make conditions even worse.";
             resultDiv.className = "result info";
-        } else if (snowfallInches === 3) {
-            resultMessage = "3 inches of snow may be decent for a quick ride. Be cautious on harder, icy spots underneath the snow. Minimal avalanche risk.";
-            resultDiv.className = "result info";
-        } else if (snowfallInches === 4) {
-            resultMessage = "4 inches will provide a smoother ride, but there may still be obstacles. Good for beginners but not ideal for experienced riders looking for more thrill.";
-            resultDiv.className = "result info";
-        } else if (snowfallInches === 5) {
-            resultMessage = "5 inches offers enough snow to create a decent trail, but conditions might still be inconsistent. Avoid steeper slopes.";
-            resultDiv.className = "result info";
-        } else if (snowfallInches === 6) {
-            resultMessage = "Perfect powder day for experienced riders! 6 inches of light powder will give you a smooth, fun ride with low avalanche risk, though be cautious in steep terrain.";
+        } else if (snowfallInches >= 6 && snowfallInches < 12) {
+            resultMessage = "Perfect for a smooth, powdery ride—ideal for someone with your experience.";
             resultDiv.className = "result safe";
-        } else if (snowfallInches === 7) {
-            resultMessage = "7 inches of snow creates ideal conditions for a fun ride in open areas or flat terrain. Be cautious of avalanche risk if going uphill.";
-            resultDiv.className = "result safe";
-        } else if (snowfallInches === 8) {
-            resultMessage = "8 inches of soft powder is great for experienced riders. The snow will be forgiving, but avalanche conditions may begin to rise as the snow piles up.";
-            resultDiv.className = "result safe";
-        } else if (snowfallInches === 9) {
-            resultMessage = "9 inches will create fun conditions for off-trail riding. Avalanche risk is moderate—ensure you're checking local reports and avoid steep slopes.";
-            resultDiv.className = "result safe";
-        } else if (snowfallInches === 10) {
-            resultMessage = "10 inches of snow will give you great off-trail riding conditions, but the avalanche risk is starting to climb. Be sure to have proper gear.";
-            resultDiv.className = "result safe";
-        } else if (snowfallInches === 12) {
-            resultMessage = "12 inches of snow gives you great conditions for riding in deeper powder. The avalanche risk is moderate to high depending on the terrain. Always carry safety equipment.";
-            resultDiv.className = "result safe";
-        } else if (snowfallInches === 15) {
-            resultMessage = "15 inches of snow means deep powder. The conditions will be a blast for experienced riders, but avalanche risk increases significantly. Stay in areas you know well.";
+        } else {
+            resultMessage = "Extreme snow conditions. Avalanche risk is high. Proceed with caution.";
             resultDiv.className = "result warning";
-        } else if (snowfallInches === 20) {
-            resultMessage = "20 inches of snow creates deep powder, but avalanche risk is high. At this point, terrain assessment is crucial, and you need avalanche safety gear.";
-            resultDiv.className = "result warning";
-        } else if (snowfallInches === 25) {
-            resultMessage = "25 inches of snow creates incredibly deep powder. Avalanche risk is very high, especially on steep slopes. Proceed with caution, and ensure you have all necessary safety equipment.";
-            resultDiv.className = "result warning";
-        } else if (snowfallInches === 30) {
-            resultMessage = "30 inches of snow brings extreme conditions. Avalanche risk is severe. Only experienced riders should consider venturing into this deep snow, and only in very safe, controlled areas.";
-            resultDiv.className = "result warning";
-        } else if (snowfallInches > 30) {
-            resultMessage = `${snowfallInches} inches of snow means extremely deep powder. Avalanche risk is extremely high. Steep terrain and open areas should be avoided unless you are trained in avalanche safety and equipped with the right gear. These conditions will be thrilling, but only if you are prepared and have proper avalanche knowledge. The ride will be exhilarating but very risky.`;
-            resultDiv.className = "result warning";
+        }
+
+        // Adjust conditions based on wind direction and load
+        if (windDirection === "north" || windDirection === "west") {
+            resultMessage += "<br><br>Wind coming from the North or West could lead to blowing snow, creating uneven surfaces and increasing avalanche risk.";
+        } else if (windDirection === "south" || windDirection === "east") {
+            resultMessage += "<br><br>Wind coming from the South or East may not affect snow conditions as much, but heavy winds could still drift snow in certain areas.";
+        }
+
+        // Wind load effects
+        if (windLoad >= 20 && windLoad < 40) {
+            resultMessage += "<br><br>Wind load is moderate. It could affect snowpack stability, increasing avalanche risk. Be cautious in higher altitudes.";
+        } else if (windLoad >= 40) {
+            resultMessage += "<br><br>Wind load is high. Expect drifting snow and increased avalanche risk. Do not venture into steep or exposed terrain without proper equipment.";
         }
 
         // Add general fun factor and snow quality for each range
         if (snowfallInches >= 6 && snowfallInches < 12) {
-            resultMessage += "<br><br>Perfect for a smooth, powdery ride—ideal for someone with your experience. Conditions will be great, but avalanche risk is moderate, so stay aware.";
+            resultMessage += "<br><br>Conditions will be great, but wind may cause drifting snow and unstable terrain in some areas. Stay aware.";
         } else if (snowfallInches >= 12 && snowfallInches < 20) {
-            resultMessage += "<br><br>Conditions are thrilling, with deeper snow for more challenging rides. Avalanche risk is rising, and terrain management becomes key.";
+            resultMessage += "<br><br>Conditions are thrilling, with deeper snow for more challenging rides. Avalanche risk is rising, and wind may worsen conditions.";
         } else if (snowfallInches >= 20) {
-            resultMessage += "<br><br>Extreme snow conditions! If you are well-prepared, this will be one of the most thrilling and challenging snowmobiling experiences, but ensure that you have the right gear and are aware of avalanche risks.";
+            resultMessage += "<br><br>Extreme snow conditions! If you are well-prepared, this will be one of the most thrilling and challenging snowmobiling experiences, but wind load could worsen the situation.";
         }
 
         resultDiv.innerHTML = resultMessage;
